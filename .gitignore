@@ -4,6 +4,7 @@
 node_modules/
 # claude
 .claude/
+cloude/
 
 # Expo
 .expo/
