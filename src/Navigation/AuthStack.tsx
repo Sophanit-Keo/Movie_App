@@ -5,8 +5,9 @@ import ResetPasswordScreen from "../screens/auth/ResetPasswordScreen";
 import RootScreen from "../screens/auth/RootScreen";
 import SignUpScreen from "../screens/auth/SignUpScreen";
 import VerificationScreen from "../screens/auth/VerificationScreen";
-import HomeScreen from "../screens/Home/HomeScreen";
 import { StaticParamList } from "@react-navigation/native";
+import { MainTap } from "./MainTap";
+
 export const AuthStack = createNativeStackNavigator({
     initialRouteName: "Root",
     screens: {
@@ -45,7 +46,7 @@ export const AuthStack = createNativeStackNavigator({
         ResetPassword: {
             screen: ResetPasswordScreen,
             options: {
-                name: 'ResetPassword',
+                name: 'a',
                 headerShown: true,
                 headerStyle: {
                     backgroundColor: '#171121',
@@ -58,7 +59,7 @@ export const AuthStack = createNativeStackNavigator({
         CreateNewPassword: {
             screen: CreateNewPasswordScreen,
             options: {
-                name: 'CreateNewPassword',
+                name: '',
                 headerShown: true,
                 headerStyle: {
                     backgroundColor: '#171121',
@@ -71,7 +72,7 @@ export const AuthStack = createNativeStackNavigator({
             screen: VerificationScreen,
             initialParams: { email: '' },
             options: {
-                name: 'Verification',
+                name: '',
                 headerShown: true,
                 headerStyle: {
                     backgroundColor: '#171121',
@@ -80,22 +81,22 @@ export const AuthStack = createNativeStackNavigator({
                 headerTitleAlign: 'center',
             }
         },
-        HomeTap: {
-            screen: HomeScreen,
+        MainTap: {
+            screen: MainTap,
             options: {
-                name: 'HomeTap',
-                headerShown: true
+                headerShown: false
             }
         }
     }
 });
 
 export type AuthParamList = StaticParamList<typeof AuthStack>;
+export type MainTapParamList = StaticParamList<typeof MainTap>;
+
 
 declare global {
     namespace ReactNavigation {
-        interface RootParamList extends Omit<AuthParamList, 'Verification'> {
+        interface RootParamList extends Omit<AuthParamList, 'Verification'>,MainTapParamList {
             Verification: { email: string };
         }
-    }
-}
+}}

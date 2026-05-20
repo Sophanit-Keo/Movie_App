@@ -44,7 +44,7 @@ export default function VerificationScreen() {
           ))}
         </View>
 
-        <AuthButton title="Continue" onPress={() => authNavigation.navigate('HomeTap')} style={styles.btn} />
+        <AuthButton title="Continue" onPress={() => authNavigation.navigate('MainTap')} style={styles.btn} />
 
         <Text style={styles.resendRow}>
           Didn't receive code?{' '}

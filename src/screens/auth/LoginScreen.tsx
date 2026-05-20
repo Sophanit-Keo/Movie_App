@@ -39,7 +39,7 @@ export default function LoginScreen() {
             </TouchableOpacity>
           </View>
 
-          <AuthButton title="Login" onPress={() => authNavigation.navigate('HomeTap')} style={styles.btn} />
+          <AuthButton title="Login" onPress={() => authNavigation.navigate('MainTap')} style={styles.btn} />
         </View>
       </ScrollView>
     </SafeAreaView>
