@@ -70,7 +70,7 @@ export const AuthStack = createNativeStackNavigator({
         },
         Verification: {
             screen: VerificationScreen,
-            initialParams: { email: '' },
+            initialParams: {  token: '', email: ''  },
             options: {
                 name: '',
                 headerShown: true,
@@ -84,7 +84,7 @@ export const AuthStack = createNativeStackNavigator({
         MainTap: {
             screen: MainTap,
             options: {
-                headerShown: false
+                headerShown: true
             }
         }
     }
@@ -97,6 +97,6 @@ export type MainTapParamList = StaticParamList<typeof MainTap>;
 declare global {
     namespace ReactNavigation {
         interface RootParamList extends Omit<AuthParamList, 'Verification'>,MainTapParamList {
-            Verification: { email: string };
+            Verification: { token: string; email?: string };
         }
 }}

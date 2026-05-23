@@ -6,6 +6,8 @@ import AuthInput from '../../components/AuthInput';
 import { useNavigation } from '@react-navigation/native';
 
 
+
+
 export default function ResetPasswordScreen() {
   const authNavigation = useNavigation();
   const [email, setEmail] = useState('');
@@ -30,7 +32,7 @@ export default function ResetPasswordScreen() {
 
         <AuthButton 
           title="Next"
-            onPress={() => authNavigation.navigate('Verification', { email })}
+            onPress={() => authNavigation.navigate('Verification', { token: '' })}
         />
       </View>
     </SafeAreaView>
@@ -50,7 +52,7 @@ const styles = StyleSheet.create({
   },
   backArrow: { color: '#FFFFFF', fontSize: 22, lineHeight: 26 },
   content: { paddingHorizontal: 24, paddingTop: 24 },
-  heading: { color: '#FFFFFF', fontSize: 28, fontWeight: '700', marginBottom: 8 },
-  subtitle: { color: '#A0A0A0', fontSize: 14, marginBottom: 40 },
+  heading: { color: '#FFFFFF', fontSize: 28, fontWeight: '700', marginBottom: 8 , alignSelf:'center'},
+  subtitle: { color: '#A0A0A0', fontSize: 14, marginBottom: 40, alignSelf:'center' },
   form: { marginBottom: 32 },
 });

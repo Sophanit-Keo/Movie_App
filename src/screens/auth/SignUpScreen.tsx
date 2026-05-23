@@ -4,32 +4,70 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthButton from '../../components/AuthButton';
 import AuthInput from '../../components/AuthInput';
 import { useNavigation } from '@react-navigation/native';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { registerUser } from '../../services/authService'
+
 
 
 export default function SignUpScreen() {
   const authNavigation = useNavigation();
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [agreed, setAgreed] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
+  function validateForm(): string | null {
+    if (!firstName || !lastName || !email || !password || !confirmPassword) return 'All fields are required.';
+    if (!email.includes('@')) return 'Enter a valid email address.';
+    if (password.length < 6) return 'Password must be at least 6 characters.';
+    if (password !== confirmPassword) return 'Passwords do not match.';
+    if (!agreed) return 'You must agree to the Terms & Conditions.';
+    return null;
+  }
+  async function fectRegister() {
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    setLoading(true);
+    setError('');
+    try {
+      const data = await registerUser({ first_name: firstName, last_name: lastName, email: email, password: password, password_confirmation: confirmPassword });
+      if (!data.token) throw new Error('Registration failed. Please try again.');
+      console.log("The User token", data.token)
+      console.log("The User email", data.user?.email)
+      authNavigation.navigate('Verification', { token: data.token, email: data.user?.email });
+    } catch (err: any) {
+      setError(err?.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.heading}>Let's get started</Text>
-        <Text style={styles.subtitle}>The latest movies and series{'\n'}are here</Text>
-
+        <Text style={styles.subtitle}>The latest movies and series are here</Text>
         <View style={styles.form}>
           <AuthInput
-            label="Full Name"
-            placeholder="Tiffany"
-            value={name}
-            onChangeText={setName}
+            label="First Name"
+            placeholder="Enter firstname"
+            value={firstName}
+            onChangeText={setFirstName}
+          />
+          <AuthInput
+            label="Last Name"
+            placeholder="Enter lastname"
+            value={lastName}
+            onChangeText={setLastName}
           />
           <AuthInput
             label="Email Address"
-            placeholder="Tiffanyjearsey@gmail.com"
+            placeholder="example@gmail.com"
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
@@ -45,11 +83,12 @@ export default function SignUpScreen() {
           <AuthInput
             label="Confirm Password"
             placeholder="••••••••••••••••••••••"
-            value={password}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
             secureToggle
-            />
+          />
 
-          <TouchableOpacity style={styles.checkRow} onPress={()=> setAgreed(!agreed)}>
+          <TouchableOpacity style={styles.checkRow} onPress={() => setAgreed(!agreed)}>
             <View style={[styles.checkbox, agreed && styles.checkboxChecked]}>
               {agreed && <Text style={styles.checkmark}>✓</Text>}
             </View>
@@ -60,10 +99,10 @@ export default function SignUpScreen() {
             </Text>
           </TouchableOpacity>
         </View>
-
+        {error ? <Text style={{ color: '#FF5F5F', marginBottom: 12, alignSelf: 'center' }}>{error}</Text> : null}
         <AuthButton
-          title="Sign Up"
-          onPress={() => authNavigation.navigate("Verification", { email })}
+          title={loading ? 'Sing Up...' : 'SignUp'}
+          onPress={fectRegister}
         />
       </View>
     </SafeAreaView>
@@ -72,13 +111,7 @@ export default function SignUpScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#171121' },
-  header: {
-    flexDirection: 'row',
-    marginRight: -40,
-    alignItems: 'center', 
-    paddingHorizontal: 20, 
-    paddingTop: 12 
-  },
+
   backBtn: {
     width: 36,
     height: 36,
@@ -88,11 +121,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backArrow: { color: '#FFFFFF', fontSize: 22, lineHeight: 26 },
-  headerTitle: { flex: 1, color: '#FFFFFF', fontSize: 25, fontWeight: '600', textAlign: 'center' },
-  headerSpacer: { width: 36 },
-  content: { flex: 1, paddingHorizontal: 24, paddingTop: 36 },
-  heading: { color: '#FFFFFF', fontSize: 26, fontWeight: '700', marginBottom: 8 },
-  subtitle: { color: '#A0A0A0', fontSize: 14, lineHeight: 21, marginBottom: 32 },
+  content: { flex: 1, paddingHorizontal: 24, paddingTop: 15 },
+  heading: { color: '#FFFFFF', fontSize: 30, fontWeight: '800', marginBottom: 8, alignSelf: 'center' },
+  subtitle: { color: '#A0A0A0', fontSize: 14, lineHeight: 21, marginBottom: 32, alignSelf: 'center' },
   form: { marginBottom: 24 },
   checkRow: { flexDirection: 'row', alignItems: 'flex-start', marginTop: 8, gap: 12 },
   checkbox: {
@@ -110,3 +141,4 @@ const styles = StyleSheet.create({
   checkLabel: { color: '#A0A0A0', fontSize: 13, lineHeight: 20, flex: 1 },
   link: { color: '#FF5F5F', fontWeight: '600' },
 });
+

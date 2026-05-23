@@ -56,7 +56,7 @@ export default function RootScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#171121' },
-  content: { flex: 1, justifyContent: 'space-between', paddingHorizontal: 42, paddingVertical: 48 },
+  content: { flex: 1, justifyContent: 'space-between', paddingHorizontal: 42, paddingVertical: 48 ,marginTop: 100},
   logoWrapper: { alignItems: 'center', marginTop: 40 },
   tv: { alignItems: 'center', marginBottom: 24 },
   antennaLeft: {
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   loginRow: { color: '#A0A0A0', textAlign: 'center', fontSize: 14 },
   loginLink: { color: '#FF5F5F', fontWeight: '600' },
   orText: { color: '#A0A0A0', textAlign: 'center', fontSize: 13 },
-  socialRow: { flexDirection: 'row', justifyContent: 'center', gap: 20 },
+  socialRow: { flexDirection: 'row', justifyContent: 'center', gap: 20, marginBottom:120 },
   socialBtn: {
     width: 56,
     height: 56,

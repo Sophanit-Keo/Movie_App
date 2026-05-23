@@ -1,32 +1,72 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthButton from '../../components/AuthButton';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { verifyEmail, resendCode } from '../../services/authService';
 
 
 
 export default function VerificationScreen() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [resendTimer, setResendTimer] = useState(60);
+  const [canResend, setCanResend] = useState(false);
   const authNavigation = useNavigation();
   const route = useRoute<any>();
-  const email: string = route.params?.email ?? '';
-  const [code, setCode] = useState(['', '', '', '','','']);
+  const email: string = route.params?.email ? route.params.email : 'example@gmail.com';
+  const token: string = route.params?.token ?? '';
+  console.log('VerificationScreen received token:', token);
+  const [code, setCode] = useState(['', '', '', '', '', '']);
   const inputs = useRef<(TextInput | null)[]>([]);
 
   const handleChange = (text: string, index: number) => {
-    const updated = [...code];
-    updated[index] = text;
-    setCode(updated);
-    if (text && index < 5) inputs.current[index + 1]?.focus();
-  };
+  const updated = [...code];
+  updated[index] = text;
+  setCode(updated);
+  if (text && index < 5) inputs.current[index + 1]?.focus();
+};
 
+
+  async function handleVerify() {
+    const otp = code.join(''); 
+    if (otp.length < 6) { setError('Please enter the 6-digit code.'); return; }
+    setLoading(true);
+    setError('');
+    try {
+      await verifyEmail({ code: otp }, token);
+      authNavigation.navigate('Login');
+    } catch (err: any) {
+      console.log('verify error:', err);
+      setError(err?.message || err?.error || 'Invalid code. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+  async function handleResend() {
+    try {
+      await resendCode(token);
+      setResendTimer(60);
+      setCanResend(false);
+      setError('');
+    } catch (err: any) {
+      console.log('resend error:', err);
+      setError(err?.message || err?.error || 'Failed to resend code.');
+    }
+  }
+
+  useEffect(() => {
+    if (resendTimer <= 0) { setCanResend(true); return; }
+    const timer = setTimeout(() => setResendTimer(t => t - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [resendTimer]);
   return (
     <SafeAreaView style={styles.container}>
 
       <View style={styles.content}>
         <Text style={styles.heading}>Verifying Your Account</Text>
         <Text style={styles.subtitle}>
-          We have just sent you 4 digit code via your{'\n'}email{' '}
+         We have just sent you a 6 digit code via your{'\n'}Email:  {''}
           <Text style={styles.emailHighlight}>{email}</Text>
         </Text>
 
@@ -44,12 +84,23 @@ export default function VerificationScreen() {
           ))}
         </View>
 
-        <AuthButton title="Continue" onPress={() => authNavigation.navigate('MainTap')} style={styles.btn} />
+        {error ? <Text style={{ color: '#FF5F5F', marginBottom: 12, textAlign: 'center' }}>{error}</Text> : null}
+        <AuthButton
+          title={loading ? 'Verifying...' : 'Continue'}
+          onPress={handleVerify}
+          style={styles.btn}
+        />
 
-        <Text style={styles.resendRow}>
-          Didn't receive code?{' '}
-          <Text style={styles.resendLink}>Resend</Text>
-        </Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 8 }}>
+          <Text style={styles.resendRow}>Didn't receive code? </Text>
+          {canResend ? (
+            <TouchableOpacity onPress={handleResend}>
+              <Text style={styles.resendLink}>Resend</Text>
+            </TouchableOpacity>
+          ) : (
+            <Text style={styles.resendRow}>Resend in {resendTimer}s</Text>
+          )}
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -68,8 +119,8 @@ const styles = StyleSheet.create({
   },
   backArrow: { color: '#FFFFFF', fontSize: 22, lineHeight: 26 },
   content: { paddingHorizontal: 24, paddingTop: 16 },
-  heading: { color: '#FFFFFF', fontSize: 24, fontWeight: '700', marginBottom: 12 },
-  subtitle: { color: '#A0A0A0', fontSize: 14, lineHeight: 22, marginBottom: 40 },
+  heading: { color: '#FFFFFF', fontSize: 24, fontWeight: '700', marginBottom: 12, alignSelf: 'center' },
+  subtitle: { color: '#A0A0A0', fontSize: 14, lineHeight: 22, marginBottom: 40, textAlign: 'center' },
   emailHighlight: { color: '#FFFFFF', fontWeight: '600' },
   otpRow: { flexDirection: 'row', gap: 16, marginBottom: 40 },
   otpBox: {

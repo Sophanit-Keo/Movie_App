@@ -5,17 +5,35 @@ import AuthInput from '../../components/AuthInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
+import { loginUser } from '../../services/authService';
 
 export default function LoginScreen() {
   const authNavigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  async function fectRegister() {
+    if (!email || !password) { setError('Email and password are required.'); return; }
+    setLoading(true);
+    setError('');
+    try {
+      await loginUser({ email, password });
+      authNavigation.navigate('MainTap');
+    } catch (err: any) {
+      setError(err?.message || 'Invalid email or password.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.content}>
-          <Text style={styles.greeting}>Hi, Tiffany</Text>
+          <Text style={styles.greeting}>Welcome to Move App</Text>
           <Text style={styles.subtitle}>Welcome back! Please enter{'\n'}your details.</Text>
 
           <View style={styles.form}>
@@ -39,7 +57,8 @@ export default function LoginScreen() {
             </TouchableOpacity>
           </View>
 
-          <AuthButton title="Login" onPress={() => authNavigation.navigate('MainTap')} style={styles.btn} />
+          {error ? <Text style={{ color: '#FF5F5F', marginBottom: 12, textAlign: 'center' }}>{error}</Text> : null}
+          <AuthButton title={loading ? 'Logging in...' : 'Login'} onPress={fectRegister} style={styles.btn} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -47,9 +66,8 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-
-  arrowColor:{
-    justifyContent:'center',
+  arrowColor: {
+    justifyContent: 'center',
     alignContent: 'center',
     fontSize: 25,
     fontWeight: '900',
@@ -84,6 +102,7 @@ const styles = StyleSheet.create({
     color: '#A0A0A0',
     fontSize: 14,
     lineHeight: 21,
+    padding: 2,
     marginBottom: 36,
     marginTop: 8,
     textAlign: 'center',
