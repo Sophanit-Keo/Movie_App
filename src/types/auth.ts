@@ -1,3 +1,10 @@
+export interface AuthContextType {
+  token: string | null;
+  isLoading: boolean;
+  login: (token: string) => Promise<void>;
+  logout: () => Promise<void>;
+}
+
 export interface RegisterRequest {
   first_name: string;
   last_name: string;
@@ -44,4 +51,13 @@ export interface VerifyResponse {
   message: string;
   token?: string;
   errors?: Record<string, string[]>;
+}
+export interface ResetPasswordSendCode{
+  email:string
+}
+export interface ResetPassword{
+    email: string;
+    code: string;
+    password: string;
+    password_confirmation: string;
 }

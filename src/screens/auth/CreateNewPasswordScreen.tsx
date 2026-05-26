@@ -1,23 +1,74 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet ,ScrollView} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthInput from '../../components/AuthInput';
 import AuthButton from '../../components/AuthButton';
-import { useNavigation } from '@react-navigation/native';
+import { createNewPassword, loginUser } from '../../services/authService';
+import { useAuth } from '../../context/AuthContext';
 
 export default function CreateNewPasswordScreen() {
-  const navigation = useNavigation();
+  const { login } = useAuth();
+  const [email, setEmail] = useState('');
+  const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  function validateForm(): string | null {
+    if (!email || !code || !password || !confirmPassword) return 'All fields are required.';
+    if (!email.includes('@')) return 'Enter a valid email address.';
+    if (password.length < 6) return 'Password must be at least 6 characters.';
+    if (password !== confirmPassword) return 'Passwords do not match.';
+    return null;
+  };
+
+  async function fectNewPassword() {
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    setLoading(true);
+    setError('')
+    try {
+      await createNewPassword({ code, email, password, password_confirmation: confirmPassword });
+      const loginData = await loginUser({ email, password });
+      if (loginData.token) {
+        await login(loginData.token); 
+      } else {
+        throw new Error('Login failed after reset. Please log in manually.');
+      }
+    } catch (err: any) {
+      setError(err?.message || 'Reset failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView keyboardShouldPersistTaps="handled">
         <View style={styles.content}>
           <Text style={styles.heading}>Create New Password</Text>
           <Text style={styles.subtitle}>Enter your new password</Text>
 
           <View style={styles.form}>
+            <AuthInput
+              label='Confirm Code'
+              value={code}
+              onChangeText={setCode}
+            />
+            <AuthInput
+              label="Email Address"
+              placeholder="Tiffanyjearsey@gmail.com"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
             <AuthInput
               label="New Password"
               placeholder="••••••••••••••••••••••"
@@ -28,15 +79,16 @@ export default function CreateNewPasswordScreen() {
             <AuthInput
               label="Confirm Password"
               placeholder="••••••••••••••••••••••"
-              value={confirm}
-              onChangeText={setConfirm}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
               secureToggle
             />
           </View>
 
-          <AuthButton title="Confirm" onPress={() => navigation.navigate('Login')} />
+          <AuthButton title={loading ? 'Confirm' : 'Reseting Password..'} onPress={() => fectNewPassword()} />
         </View>
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

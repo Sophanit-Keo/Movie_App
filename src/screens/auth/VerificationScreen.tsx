@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthButton from '../../components/AuthButton';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -62,7 +62,8 @@ export default function VerificationScreen() {
   }, [resendTimer]);
   return (
     <SafeAreaView style={styles.container}>
-
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView keyboardShouldPersistTaps="handled">
       <View style={styles.content}>
         <Text style={styles.heading}>Verifying Your Account</Text>
         <Text style={styles.subtitle}>
@@ -102,6 +103,8 @@ export default function VerificationScreen() {
           )}
         </View>
       </View>
+      </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
