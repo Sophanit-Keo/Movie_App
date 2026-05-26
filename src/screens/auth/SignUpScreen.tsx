@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthButton from '../../components/AuthButton';
 import AuthInput from '../../components/AuthInput';
@@ -49,6 +49,9 @@ export default function SignUpScreen() {
   }
   return (
     <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView keyboardShouldPersistTaps="handled">
+        
       <View style={styles.content}>
         <Text style={styles.heading}>Let's get started</Text>
         <Text style={styles.subtitle}>The latest movies and series are here</Text>
@@ -105,6 +108,8 @@ export default function SignUpScreen() {
           onPress={fectRegister}
         />
       </View>
+      </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

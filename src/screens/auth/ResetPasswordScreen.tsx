@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthButton from '../../components/AuthButton';
 import AuthInput from '../../components/AuthInput';
 import { useNavigation } from '@react-navigation/native';
+import { resendCodeEmaill } from '../../services/authService';
+
 
 
 
@@ -11,10 +13,27 @@ import { useNavigation } from '@react-navigation/native';
 export default function ResetPasswordScreen() {
   const authNavigation = useNavigation();
   const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLodaing] = useState(false)
+
+
+    async function handleResendCode() {
+      try {
+        await resendCodeEmaill({email:email});
+        setError('');
+        setLodaing(true)
+        authNavigation.navigate('CreateNewPassword')
+      } catch (err: any) {
+        console.log('resend error:', err);
+        setError(err?.message || err?.error || 'Failed to resend code.');
+      }
+    }
 
   return (
     <SafeAreaView style={styles.container}>
-
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView keyboardShouldPersistTaps="handled">
+        
       <View style={styles.content}>
         <Text style={styles.heading}>Reset Password</Text>
         <Text style={styles.subtitle}>Recover your account password</Text>
@@ -29,12 +48,14 @@ export default function ResetPasswordScreen() {
             autoCapitalize="none"
           />
         </View>
-
+        {error ? <Text style={{ color: '#FF5F5F', marginBottom: 12, alignSelf: 'center' }}>{error}</Text> : null}
         <AuthButton 
-          title="Next"
-            onPress={() => authNavigation.navigate('Verification', { token: '' })}
+          title={loading ? 'Sing Up...' : 'SignUp'}
+            onPress={() => handleResendCode()}
         />
       </View>
+      </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -56,3 +77,4 @@ const styles = StyleSheet.create({
   subtitle: { color: '#A0A0A0', fontSize: 14, marginBottom: 40, alignSelf:'center' },
   form: { marginBottom: 32 },
 });
+
