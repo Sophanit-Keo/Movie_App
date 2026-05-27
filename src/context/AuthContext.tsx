@@ -33,16 +33,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
       setIsLoading(false);
+    }).catch(() => {
+      // SecureStore unavailable (e.g. web) — just show auth screen
+      setIsLoading(false);
     });
   }, []);
 
   async function login(newToken: string) {
-    await SecureStore.setItemAsync(TOKEN_KEY, newToken);
+    try { await SecureStore.setItemAsync(TOKEN_KEY, newToken); } catch {}
     setToken(newToken);
   }
 
   async function logout() {
-    await SecureStore.deleteItemAsync(TOKEN_KEY);
+    try { await SecureStore.deleteItemAsync(TOKEN_KEY); } catch {}
     setToken(null);
   }
 
