@@ -4,12 +4,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthButton from '../../components/AuthButton';
 import AuthInput from '../../components/AuthInput';
 import { useNavigation } from '@react-navigation/native';
-import { registerUser } from '../../services/authService'
+import { registerUser } from '../../services/authService';
+import { useAuth } from '../../context/AuthContext';
 
 
 
 export default function SignUpScreen() {
   const authNavigation = useNavigation();
+  const { login } = useAuth();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -38,9 +40,7 @@ export default function SignUpScreen() {
     try {
       const data = await registerUser({ first_name: firstName, last_name: lastName, email: email, password: password, password_confirmation: confirmPassword });
       if (!data.token) throw new Error('Registration failed. Please try again.');
-      console.log("The User token", data.token)
-      console.log("The User email", data.user?.email)
-      authNavigation.navigate('Verification', { token: data.token, email: data.user?.email });
+      await login(data.token); // skip email verification in dev
     } catch (err: any) {
       setError(err?.message || 'Registration failed. Please try again.');
     } finally {

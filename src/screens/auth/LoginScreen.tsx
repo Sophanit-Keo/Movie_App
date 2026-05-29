@@ -27,6 +27,11 @@ export default function LoginScreen() {
         setError('Login failed. No token received.');
       }
     } catch (err: any) {
+      // Some APIs return a token even for unverified accounts — use it directly
+      if (err?.token) {
+        await login(err.token);
+        return;
+      }
       setError(err?.message || 'Invalid email or password.');
     } finally {
       setLoading(false);
