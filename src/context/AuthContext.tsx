@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import { AuthContextType } from '../types/auth';
+import { AuthContextType } from '../network/models/auth';
 
 const TOKEN_KEY = 'auth_token';
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -11,19 +11,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // On app startup: restore saved token and verify it's still valid
+  
   useEffect(() => {
     SecureStore.getItemAsync(TOKEN_KEY).then(async (saved) => {
       if (saved) {
         try {
-          // Ask the server "is this token still valid?"
           const res = await fetch(`${BASE_URL}/user`, {
             headers: { Authorization: `Bearer ${saved}` },
           });
           if (res.ok) {
             setToken(saved);            // ✅ valid — stay logged in
           } else {
-            // ❌ expired or invalid — clear it
             await SecureStore.deleteItemAsync(TOKEN_KEY);
             setToken(null);
           }

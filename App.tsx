@@ -1,8 +1,8 @@
 import { createStaticNavigation } from '@react-navigation/native';
 import { ActivityIndicator, View } from 'react-native';
 import { AuthProvider, useAuth } from './src/context/AuthContext';
-import { AuthStack } from './src/Navigation/AuthStack';
-import { MainTap } from './src/Navigation/MainTap';
+import { AuthStack } from './src/navigation/AuthStack';
+import { MainTap } from './src/navigation/MainTap';
 
 const AuthNavigation = createStaticNavigation(AuthStack);
 const MainNavigation = createStaticNavigation(MainTap);

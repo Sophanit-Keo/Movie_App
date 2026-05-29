@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthButton from '../../components/AuthButton';
 import AuthInput from '../../components/AuthInput';
 import { useNavigation } from '@react-navigation/native';
-import { resendCodeEmaill } from '../../services/authService';
+import { resendCodeEmaill } from '../../network/services/authService';
 
 
 
@@ -50,7 +50,7 @@ export default function ResetPasswordScreen() {
         </View>
         {error ? <Text style={{ color: '#FF5F5F', marginBottom: 12, alignSelf: 'center' }}>{error}</Text> : null}
         <AuthButton 
-          title={loading ? 'Sing Up...' : 'SignUp'}
+          title={loading ? 'Sending Code' : 'Send Code'}
             onPress={() => handleResendCode()}
         />
       </View>

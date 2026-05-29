@@ -4,7 +4,7 @@ import AuthButton from '../../components/AuthButton'
 import AuthInput from '../../components/AuthInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { loginUser } from '../../services/authService';
+import { loginUser } from '../../network/services/authService';
 import { useAuth } from '../../context/AuthContext';
 
 export default function LoginScreen() {

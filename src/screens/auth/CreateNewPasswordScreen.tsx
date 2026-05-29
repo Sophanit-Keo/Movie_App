@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } fr
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthInput from '../../components/AuthInput';
 import AuthButton from '../../components/AuthButton';
-import { createNewPassword, loginUser } from '../../services/authService';
+import { createNewPassword, loginUser } from '../../network/services/authService';
 import { useAuth } from '../../context/AuthContext';
 
 export default function CreateNewPasswordScreen() {
@@ -84,8 +84,8 @@ export default function CreateNewPasswordScreen() {
               secureToggle
             />
           </View>
-
-          <AuthButton title={loading ? 'Confirm' : 'Reseting Password..'} onPress={() => fectNewPassword()} />
+          {error ? <Text style={{ color: '#FF5F5F', marginBottom: 12, textAlign: 'center' }}>{error}</Text> : null}
+          <AuthButton title={loading ? 'Reseting Password..' : 'Confirm'} onPress={() => fectNewPassword()} />
         </View>
       </ScrollView>
       </KeyboardAvoidingView>

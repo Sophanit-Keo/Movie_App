@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthButton from '../../components/AuthButton';
 import AuthInput from '../../components/AuthInput';
 import { useNavigation } from '@react-navigation/native';
-import { registerUser } from '../../services/authService'
+import { registerUser } from '../../network/services/authService'
 
 
 
