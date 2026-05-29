@@ -1,9 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AntDesign } from '@expo/vector-icons';
-import HomeStack from '../screens/home/HomeScreen';
+import { AntDesign, EvilIcons, FontAwesome, Ionicons, SimpleLineIcons } from '@expo/vector-icons';
+import { HomeStack } from './HomeStack';
 import { ProfileStack } from './ProfileStrack';
 import { SearchStack } from './SearchStack';
-
 
 
 export const MainTap = createBottomTabNavigator({
@@ -11,6 +10,12 @@ export const MainTap = createBottomTabNavigator({
         headerShown: false,
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
+        tabBarStyle: { 
+          backgroundColor: '#171121', 
+          height: 60,
+          borderTopWidth: 0,
+          elevation: 5
+        },
     },
     screens: {
         HomeStack: {
@@ -19,7 +24,7 @@ export const MainTap = createBottomTabNavigator({
                 headerShown: true,
                 tabBarLabel: "Home",
                 tabBarIcon: ({ color, size }) => (
-                    <AntDesign name="home" size={size} color={color} />
+                    <Ionicons name="home" size={size} color={color} />
                 ),
             },
             
@@ -28,9 +33,9 @@ export const MainTap = createBottomTabNavigator({
             screen: SearchStack,
             options: {
                 headerShown: false,
-                tabBarLabel: "Setting",
+                tabBarLabel: "Search",
                 tabBarIcon: ({ color, size }) => (
-                    <AntDesign name="search" size={size} color={color} />
+                    <Ionicons name="search" size={size} color={color} />
                 ),
             },
         },
@@ -40,9 +45,20 @@ export const MainTap = createBottomTabNavigator({
                 headerShown: false,
                 tabBarLabel: "Profile",
                 tabBarIcon: ({ color, size }) => (
-                    <AntDesign name="profile" size={size} color={color} />
+                    <Ionicons name="people" size={size} color={color} />
                 ),
             }
         }
     }
 });
+export type MainTabParamList = {
+    HomeStack: undefined;
+    SearchStack: undefined;
+    ProfileStack: undefined;
+};
+
+declare global {
+    namespace ReactNavigation {
+        interface RootParamList extends MainTabParamList {}
+    }
+}

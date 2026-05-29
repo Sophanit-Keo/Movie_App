@@ -3,14 +3,14 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Keyboa
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthButton from '../../components/AuthButton';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { verifyEmail, resendCode } from '../../services/authService';
+import { verifyEmail, resendCode } from '../../network/services/authService';
 
 
 
 export default function VerificationScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [resendTimer, setResendTimer] = useState(60);
+  const [resendTimer, setResendTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
   const authNavigation = useNavigation();
   const route = useRoute<any>();
@@ -46,7 +46,7 @@ export default function VerificationScreen() {
   async function handleResend() {
     try {
       await resendCode(token);
-      setResendTimer(60);
+      setResendTimer(30);
       setCanResend(false);
       setError('');
     } catch (err: any) {
