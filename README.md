@@ -17,6 +17,16 @@
 
 ---
 
+## 👥 Team
+
+| Name | GitHub | Role |
+|------|--------|------|
+| Keo Sophanit | [@Sophanit-Keo](https://github.com/Sophanit-Keo) | Auth & Search Screen |
+| Than Sorithyreach  | [@Sorithyreach-Than](https://github.com/sorithyreach) | Home Screen |
+| Chab Socheat  | [@Socheat-Chab](https://github.com/socheat1808) | Profile Screen |
+
+---
+
 ## 📋 Table of Contents
 
 - [Features](#-features)
@@ -42,7 +52,7 @@
   - Login with JWT token
   - Forgot password / Reset password flow
 - 📱 **Bottom Tab Navigation** — Home, Search, Profile
-- 🔒 **Secure Token Storage** — JWT stored with `expo-secure-store`
+- 🔒 **Secure Token Storage** — stored with `expo-secure-store`
 - 🔄 **Auto-Login** — Token validated automatically on app start
 - 🌙 **Dark Theme** — Polished dark UI throughout
 - 📡 **REST API Integration** — Backed by a Laravel REST API
@@ -135,6 +145,7 @@ EXPO_PUBLIC_API_URL=https://laravel-auth-api-opal.vercel.app/api
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `EXPO_PUBLIC_API_URL` | Base URL of the backend REST API | `https://laravel-auth-api-opal.vercel.app/api` |
+| `EXPO_PUBLIC_API_TOKEN_TMDB` | Get the Token form movie DB | your_tmdb_read_access_token_here |
 
 Create a `.env` file at the project root (next to `package.json`). A template is provided at [`.env.example`](.env.example).
 
@@ -186,41 +197,52 @@ movie-app/
 ├── src/
 │   ├── components/             # Reusable UI components
 │   │   ├── AuthButton.tsx      # Custom purple action button
-│   │   └── AuthInput.tsx       # Text input with password toggle
+│   │   ├── AuthInput.tsx       # Text input with password toggle
+│   │   └── MovieResultCard.tsx # Search result card with poster & meta
 │   │
 │   ├── context/
 │   │   └── AuthContext.tsx     # Global auth state (token, login, logout)
 │   │
-│   ├── Navigation/             # React Navigation configuration
+│   ├── hooks/
+│   │   └── useMovieSearch.ts   # Debounced movie search hook
+│   │
+│   ├── navigation/             # React Navigation configuration
 │   │   ├── AuthStack.tsx       # Stack navigator for auth screens
 │   │   ├── MainTap.tsx         # Bottom tab navigator (post-login)
 │   │   ├── HomeStack.tsx       # Home tab stack
 │   │   ├── SearchStack.tsx     # Search tab stack
 │   │   └── ProfileStrack.tsx   # Profile tab stack
 │   │
+│   ├── network/
+│   │   ├── models/             # TypeScript interfaces & types
+│   │   │   ├── auth.ts         # Auth request/response types
+│   │   │   └── search.ts       # Movie & search response types
+│   │   │
+│   │   └── services/           # API call functions
+│   │       ├── authService.ts  # Auth endpoints (login, register, verify…)
+│   │       └── searchService.ts# TMDB search & now-playing endpoints
+│   │
 │   ├── screens/
 │   │   ├── auth/               # Authentication screens
-│   │   │   ├── RootScreen.tsx          # Welcome / landing screen
-│   │   │   ├── LoginScreen.tsx         # Login form
-│   │   │   ├── SignUpScreen.tsx        # Registration form
-│   │   │   ├── VerificationScreen.tsx  # OTP email verification
-│   │   │   ├── ResetPasswordScreen.tsx # Forgot password (enter email)
+│   │   │   ├── RootScreen.tsx              # Welcome / landing screen
+│   │   │   ├── LoginScreen.tsx             # Login form
+│   │   │   ├── SignUpScreen.tsx            # Registration form
+│   │   │   ├── VerificationScreen.tsx      # OTP email verification
+│   │   │   ├── ResetPasswordScreen.tsx     # Forgot password (enter email)
 │   │   │   └── CreateNewPasswordScreen.tsx # Set new password
 │   │   │
 │   │   ├── home/
-│   │   │   └── HomeScreen.tsx   # Movie home feed (in development)
+│   │   │   └── HomeScreen.tsx      # Movie home feed
 │   │   │
 │   │   ├── search/
-│   │   │   └── SearchScreen.tsx # Movie search (in development)
+│   │   │   ├── SearchScreen.tsx    # Movie search with live results
+│   │   │   └── MovieDetailScreen.tsx # Full movie detail view
 │   │   │
 │   │   └── profile/
-│   │       └── ProfileScreen.tsx # User profile + logout
+│   │       └── ProfileScreen.tsx   # User profile + logout
 │   │
-│   ├── services/
-│   │   └── authService.ts      # All API call functions
-│   │
-│   └── types/
-│       └── auth.ts             # TypeScript interfaces & types
+│   └── theme/
+│       └── colors.ts           # App-wide color palette
 │
 ├── App.tsx                     # Root component & navigation entry
 ├── index.ts                    # Expo entry point
@@ -283,12 +305,12 @@ Authenticated endpoints require the `Authorization: Bearer <token>` header.
 
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
-| `POST` | `/register` | ❌ | Register a new user |
-| `POST` | `/login` | ❌ | Log in and receive a JWT token |
+| `POST` | `/register` | ✅ | Register a new user |
+| `POST` | `/login` | ✅ | Log in and receive a  token |
 | `POST` | `/email/verify/check` | ✅ | Submit OTP to verify email |
 | `POST` | `/email/verify/send` | ✅ | Resend OTP verification email |
-| `POST` | `/forgot-password/send-code` | ❌ | Send password reset code to email |
-| `POST` | `/forgot-password/reset` | ❌ | Reset password with code |
+| `POST` | `/forgot-password/send-code` | ✅ | Send password reset code to email |
+| `POST` | `/forgot-password/reset` | ✅ | Reset password with code |
 | `GET`  | `/user` | ✅ | Get the currently authenticated user |
 
 ### Example — Login Request
@@ -360,5 +382,5 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 ---
 
 <p align="center">
-  Built with ❤️ by <a href="https://github.com/Sophanit-Keo">Sophanit Keo</a>
+  Built with ❤️ by the Cinemax Team
 </p>
