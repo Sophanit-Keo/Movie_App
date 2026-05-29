@@ -60,14 +60,29 @@
 ---
 
 ## 📸 Screenshots
-
+### Authentication 
 | Welcome | Login | Sign Up | Verification |
 |---------|-------|---------|--------------|
 |![Wellcome Screen](./screenshot/RootScreen.jpg)| ![Login Screen](./screenshot/LoginScreen.jpg) |![SignUp Screen](./screenshot/SignUpScreen.jpg) | ![Verification Screen](./screenshot/VerifyAccountScreen.jpg) |
 
-| Reset Password | New Password | Home | Search | Profile |
-|----------------|--------------|------|--------|---------|
-| ![Reset Password](./screenshot/ResetPasswordScreen_P1.jpg)|![New Password](./screenshot/ResetPasswordScreen_P2.jpg) | _(screenshot)_ | _(screenshot)_ | _(screenshot)_ |
+| Reset Password | New Password |
+|----------------|--------------|
+| ![Reset Password](./screenshot/ResetPasswordScreen_P1.jpg)|![New Password](./screenshot/ResetPasswordScreen_P2.jpg) |
+
+### Search
+| Search | Search Result  | Search Fail  |
+|------|--------|---------|
+| ![Search P1](./screenshot/SearchScreen_P1.jpg) | ![Search P2](./screenshot/SearchScreen_P2.jpg) |![Search P3](./screenshot/SearchScreen_P3.jpg)  |
+
+### Home
+| Home View 1 | Home View 2  | Home View 3  |
+|------|--------|---------|
+| _(screenshot)_ |_(screenshot)_ |_(screenshot)_ |
+
+### Profile
+| Search View 1 | Search View 2  | Search View 3  |
+|------|--------|---------|
+| _(screenshot)_ |_(screenshot)_  |_(screenshot)_|
 
 ---
 
@@ -134,6 +149,7 @@ Then open `.env` and set your API URL:
 
 ```env
 EXPO_PUBLIC_API_URL=https://laravel-auth-api-opal.vercel.app/api
+EXPO_PUBLIC_API_TOKEN_TMDB: your_tmdb_read_access_token_here 
 ```
 
 > **Note:** The `EXPO_PUBLIC_` prefix is required by Expo to expose the variable to the app bundle.
