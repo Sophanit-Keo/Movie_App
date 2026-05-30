@@ -1,53 +1,108 @@
-import { RegisterRequest, RegisterResponse, LoginRequest, LoginResponse, VerifyRequest, VerifyResponse } from "../types/auth";
+import { supabase } from "./supabaseClient";
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+// ─── 1. REGISTER ─────────────────────────────────────────────
+export async function registerUser(data: {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+}) {
+  const { data: result, error } = await supabase.auth.signUp({
+    email: data.email,
+    password: data.password,
+    options: {
+      data: {
+        first_name: data.first_name,
+        last_name: data.last_name,
+      },
+    },
+  });
+  if (error) throw { message: error.message };
+  return result;
+}
 
-// Register API
-export async function registerUser(data: RegisterRequest): Promise<RegisterResponse> {
-  const response = await fetch(`${BASE_URL}/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify(data),
+// ─── 2. VERIFY OTP CODE ──────────────────────────────────────
+export async function verifyOtp(email: string, token: string) {
+  const { data, error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "signup",
   });
-  const json = await response.json();
-  if (!response.ok) throw json; 
-  return json;
+  if (error) throw { message: error.message };
+  return data;
 }
-// Login
-export async function loginUser(data: LoginRequest): Promise<LoginResponse> {
-  const response = await fetch(`${BASE_URL}/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify(data),
+
+// ─── 3. RESEND OTP CODE ──────────────────────────────────────
+export async function resendOtp(email: string) {
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email,
   });
-  const json = await response.json();
-  if (!response.ok) throw json;
-  return json;
+  if (error) throw { message: error.message };
 }
-// Veriify Email
-export async function verifyEmail(data: VerifyRequest, token: string): Promise<VerifyResponse> {
-  const url = `${BASE_URL}/email/verify/check`;
-  console.log('verifyEmail url:', url, 'token:', token);
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': `Bearer ${token}` },
-    body: JSON.stringify(data),
+
+// ─── 4. LOGIN ────────────────────────────────────────────────
+export async function loginUser(data: { email: string; password: string }) {
+  const { data: result, error } = await supabase.auth.signInWithPassword({
+    email: data.email,
+    password: data.password,
   });
-  const json = await response.json();
-  console.log('verifyEmail status:', response.status, 'body:', json);
-  if (!response.ok) throw json;
-  return json;
+  if (error) throw { message: error.message };
+
+  // Block login if email not verified
+  if (result.user && !result.user.email_confirmed_at) {
+    await supabase.auth.signOut();
+    throw { message: "Please verify your email before logging in." };
+  }
+
+  return result;
 }
-// Resend Code
-export async function resendCode(token: string): Promise<{ message: string }> {
-  const url = `${BASE_URL}/email/verify/send`;
-  console.log('resendCode url:', url, 'token:', token);
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': `Bearer ${token}` },
+
+// ─── 5. LOGOUT ───────────────────────────────────────────────
+export async function logoutUser() {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw { message: error.message };
+}
+
+// ─── 6. GET CURRENT USER ─────────────────────────────────────
+export async function getCurrentUser() {
+  const { data, error } = await supabase.auth.getUser();
+  if (error) throw { message: error.message };
+  return data.user;
+}
+
+// ─── 7. UPDATE PROFILE ───────────────────────────────────────
+export async function updateProfile(data: {
+  first_name: string;
+  last_name: string;
+}) {
+  const { data: result, error } = await supabase.auth.updateUser({
+    data: {
+      first_name: data.first_name,
+      last_name: data.last_name,
+    },
   });
-  const json = await response.json();
-  console.log('resendCode status:', response.status, 'body:', json);
-  if (!response.ok) throw json;
-  return json;
+  if (error) throw { message: error.message };
+  return result;
+}
+
+// ─── 8. UPDATE PASSWORD ──────────────────────────────────────
+export async function updatePassword(data: { password: string }) {
+  const { error } = await supabase.auth.updateUser({
+    password: data.password,
+  });
+  if (error) throw { message: error.message };
+}
+
+// ─── 9. SEND RESET CODE ──────────────────────────────────────
+export async function sendResetCode(data: { email: string }) {
+  const { error } = await supabase.auth.resetPasswordForEmail(data.email);
+  if (error) throw { message: error.message };
+}
+
+// ─── 10. CHECK SESSION ───────────────────────────────────────
+export async function getSession() {
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw { message: error.message };
+  return data.session;
 }

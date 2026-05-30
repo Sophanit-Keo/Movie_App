@@ -7,17 +7,10 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
-  message: string;
-  user?: {
-    id: number;
-    first_name: string;
-    last_name: string;
-    email: string;
-  };
-  token?: string;
-  errors?: Record<string, string[]>;
+  token: string;
+  user: User;
+  message?: string;
 }
-
 
 export interface LoginRequest {
   email: string;
@@ -25,15 +18,9 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  message: string;
-  user?: {
-    id: number;
-    first_name: string;
-    last_name: string;
-    email: string;
-  };
-  token?: string;
-  errors?: Record<string, string[]>;
+  token: string;
+  user: User;
+  message?: string;
 }
 
 export interface VerifyRequest {
@@ -42,6 +29,16 @@ export interface VerifyRequest {
 
 export interface VerifyResponse {
   message: string;
-  token?: string;
-  errors?: Record<string, string[]>;
+}
+
+// ← Add this
+export interface User {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  email_verified_at: string | null;
+  profile_photo_url?: string;
+  created_at: string;
+  updated_at: string;
 }
