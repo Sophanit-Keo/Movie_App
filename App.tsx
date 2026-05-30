@@ -1,6 +1,7 @@
 import { createStaticNavigation } from '@react-navigation/native';
 import { ActivityIndicator, View } from 'react-native';
 import { AuthProvider, useAuth } from './src/context/AuthContext';
+import { WatchlistProvider } from './src/context/WatchListContext';
 import { AuthStack } from './src/navigation/AuthStack';
 import { MainTap } from './src/navigation/MainTap';
 
@@ -24,7 +25,9 @@ function RootNavigator() {
 export default function App() {
   return (
     <AuthProvider>
-      <RootNavigator />
+      <WatchlistProvider>
+        <RootNavigator />
+      </WatchlistProvider>
     </AuthProvider>
   );
 }
