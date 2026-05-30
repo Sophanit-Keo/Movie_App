@@ -100,9 +100,11 @@ export default function MovieDetailScreen() {
       getMovieReviews(movieId),
     ])
       .then(([d, c, r]) => {
+        const castItems = Array.isArray(c?.cast) ? c.cast : [];
+        const reviewItems = Array.isArray(r?.results) ? r.results : [];
         setDetail(d);
-        setCast(c.cast.slice(0, 10));
-        setReviews(r.results.slice(0, 10));
+        setCast(castItems.slice(0, 10));
+        setReviews(reviewItems.slice(0, 10));
       })
       .catch(() => {})
       .finally(() => setLoading(false));

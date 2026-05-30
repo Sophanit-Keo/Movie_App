@@ -7,11 +7,14 @@ import { ProfileStack } from './ProfileStrack';
 import { SearchStack } from './SearchStack';
 
 function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+  const routes = state?.routes ?? [];
+
   return (
     <View style={styles.tabBar}>
-      {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
-        const focused = state.index === index;
+      {routes.map((route, index) => {
+        const descriptor = descriptors?.[route.key];
+        const options = descriptor?.options ?? {};
+        const focused = state?.index === index;
         const color = focused ? '#0296E5' : '#67686D';
         const icon = options.tabBarIcon?.({ focused, color, size: 22 });
         const label = typeof options.tabBarLabel === 'string' ? options.tabBarLabel : route.name;
@@ -86,8 +89,8 @@ const styles = StyleSheet.create({
     borderTopColor: '#252836',
     borderTopWidth: 1,
     height: 62,
-    paddingTop: 8,
-    paddingBottom: 10,
+    paddingTop: 6,
+    paddingBottom: 14,
     alignItems: 'center',
   },
   tabItem: {

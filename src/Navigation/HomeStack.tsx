@@ -1,7 +1,11 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StaticParamList } from '@react-navigation/native';
 import HomeScreen from '../screens/Home/HomeScreen';
 import MovieDetailScreen from '../screens/Home/MovieDetailScreen';
+
+export type HomeParamList = {
+  HomeScreen: undefined;
+  MovieDetail: { movieId: number };
+};
 
 export const HomeStack = createNativeStackNavigator({
   screens: {
@@ -25,8 +29,6 @@ export const HomeStack = createNativeStackNavigator({
     },
   },
 });
-
-export type HomeParamList = StaticParamList<typeof HomeStack>;
 
 declare global {
   namespace ReactNavigation {

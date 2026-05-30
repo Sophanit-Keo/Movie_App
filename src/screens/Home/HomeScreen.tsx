@@ -14,26 +14,25 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { getTrending, getMoviesByCategory, POSTER_BASE } from '../../services/movieService';
 import { Movie } from '../../types/movie';
-import { HomeParamList } from '../../Navigation/HomeStack';
 import { WEB_PHONE_W } from '../../constants/phone';
-
-type Nav = NativeStackNavigationProp<HomeParamList, 'HomeScreen'>;
 
 const SCREEN_WIDTH = Platform.OS === 'web' ? WEB_PHONE_W : Dimensions.get('window').width;
 const PAD = 16;
 const FEATURED_W = SCREEN_WIDTH * 0.46;
 const FEATURED_H = FEATURED_W * 1.52;
 const GAP = 8;
-const GRID_W = (SCREEN_WIDTH - PAD * 2 - GAP * 2) / 3;
+const GRID_COLUMNS = 3;
+const GRID_ROWS = 3;
+const MAX_GRID_ITEMS = GRID_COLUMNS * GRID_ROWS;
+const GRID_W = (SCREEN_WIDTH - PAD * 2 - GAP * (GRID_COLUMNS - 1)) / GRID_COLUMNS;
 const GRID_H = GRID_W * 1.5;
 
 const CATEGORIES = ['Now playing', 'Upcoming', 'Top rated', 'Popular'];
 
 export default function HomeScreen() {
-  const navigation = useNavigation<Nav>();
+  const navigation = useNavigation<any>();
   const [trending, setTrending] = useState<Movie[]>([]);
   const [movies, setMovies] = useState<Movie[]>([]);
   const [activeCategory, setActiveCategory] = useState('Now playing');
@@ -42,14 +41,22 @@ export default function HomeScreen() {
 
   useEffect(() => {
     getTrending()
-      .then(data => setTrending(data.results.slice(0, 6)))
+      .then(data => {
+        const items = Array.isArray(data?.results) ? data.results : [];
+        setTrending(items.slice(0, 6));
+      })
+      .catch(() => setTrending([]))
       .finally(() => setTrendingLoading(false));
   }, []);
 
   useEffect(() => {
     setMoviesLoading(true);
     getMoviesByCategory(activeCategory)
-      .then(data => setMovies(data.results))
+      .then(data => {
+        const items = Array.isArray(data?.results) ? data.results : [];
+        setMovies(items.slice(0, MAX_GRID_ITEMS));
+      })
+      .catch(() => setMovies([]))
       .finally(() => setMoviesLoading(false));
   }, [activeCategory]);
 
@@ -124,17 +131,22 @@ export default function HomeScreen() {
         {moviesLoading ? (
           <ActivityIndicator size="large" color="#0296E5" style={{ marginTop: 40 }} />
         ) : (
-          <View style={styles.grid}>
-            {movies.map(movie => (
+          <FlatList
+            data={movies}
+            keyExtractor={item => `g-${item.id}`}
+            numColumns={GRID_COLUMNS}
+            scrollEnabled={false}
+            contentContainerStyle={styles.grid}
+            columnWrapperStyle={styles.gridRow}
+            renderItem={({ item }) => (
               <TouchableOpacity
-                key={movie.id}
                 style={styles.gridItem}
                 activeOpacity={0.8}
-                onPress={() => goToDetail(movie.id)}
+                onPress={() => goToDetail(item.id)}
               >
-                {movie.poster_path ? (
+                {item.poster_path ? (
                   <Image
-                    source={{ uri: `${POSTER_BASE}${movie.poster_path}` }}
+                    source={{ uri: `${POSTER_BASE}${item.poster_path}` }}
                     style={styles.gridImage}
                     resizeMode="cover"
                   />
@@ -142,8 +154,8 @@ export default function HomeScreen() {
                   <View style={[styles.gridImage, styles.placeholder]} />
                 )}
               </TouchableOpacity>
-            ))}
-          </View>
+            )}
+          />
         )}
       </ScrollView>
     </SafeAreaView>
@@ -243,11 +255,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
     paddingHorizontal: PAD,
-    rowGap: GAP,
-    columnGap: GAP,
+  },
+  gridRow: {
+    justifyContent: 'space-between',
+    marginBottom: GAP,
   },
   gridItem: {
     width: GRID_W,
