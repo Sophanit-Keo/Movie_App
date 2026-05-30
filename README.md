@@ -75,9 +75,9 @@
 | ![Search P1](./screenshot/SearchScreen_P1.jpg) | ![Search P2](./screenshot/SearchScreen_P2.jpg) |![Search P3](./screenshot/SearchScreen_P3.jpg)  |
 
 ### Home
-| Home View 1 | Home View 2  | Home View 3  |
-|------|--------|---------|
-| _(screenshot)_ |_(screenshot)_ |_(screenshot)_ |
+| Home View  |  About Movie | Cast Movie  | Review Movie |
+|--------|--------|--------|--------|
+| ![Home P1](/screenshot/HomeScreen.jpg) | ![Home P2](./screenshot/DetailsAboutMovie.jpg) | ![Home P3](./screenshot/DetailsCastMovie.jpg) | ![Home P4](./screenshot/DetailsReviewMovie.jpg) |
 
 ### Profile
 | Search View 1 | Search View 2  | Search View 3  |
