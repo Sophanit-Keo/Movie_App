@@ -1,8 +1,9 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { AntDesign, EvilIcons, FontAwesome, Ionicons, SimpleLineIcons } from '@expo/vector-icons';
-import { HomeStack } from './HomeStack';
 import { ProfileStack } from './ProfileStrack';
 import { SearchStack } from './SearchStack';
+import HomeStack from './HomeStack';
+
 
 
 export const MainTap = createBottomTabNavigator({
@@ -21,7 +22,7 @@ export const MainTap = createBottomTabNavigator({
         HomeStack: {
             screen: HomeStack, 
             options: {
-                headerShown: true,
+                headerShown: false,
                 tabBarLabel: "Home",
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="home" size={size} color={color} />
