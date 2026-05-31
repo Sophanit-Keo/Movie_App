@@ -48,6 +48,7 @@ export default function LoginScreen() {
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
+              editable={!loading}
             />
             <AuthInput
               label="Password"
@@ -55,6 +56,7 @@ export default function LoginScreen() {
               value={password}
               onChangeText={setPassword}
               secureToggle
+              editable={!loading}
             />
             <TouchableOpacity onPress={() => authNavigation.navigate('ResetPassword')}>
               <Text style={styles.forgotText}>Forgot Password?</Text>
@@ -62,7 +64,7 @@ export default function LoginScreen() {
           </View>
 
           {error ? <Text style={{ color: '#FF5F5F', marginBottom: 12, textAlign: 'center' }}>{error}</Text> : null}
-          <AuthButton title={loading ? 'Logging in...' : 'Login'} onPress={fectLogin} style={styles.btn} />
+          <AuthButton title={loading ? 'Logging in...' : 'Login'} onPress={fectLogin} style={styles.btn} loading={loading} />
         </View>
       </ScrollView>
       </KeyboardAvoidingView>

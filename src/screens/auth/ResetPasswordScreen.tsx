@@ -14,18 +14,21 @@ export default function ResetPasswordScreen() {
   const authNavigation = useNavigation();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLodaing] = useState(false)
+  const [loading, setLoading] = useState(false)
 
 
     async function handleResendCode() {
+      if (!email) { setError('Email address is required.'); return; }
+      setLoading(true);
+      setError('');
       try {
         await resendCodeEmaill({email:email});
-        setError('');
-        setLodaing(true)
         authNavigation.navigate('CreateNewPassword')
       } catch (err: any) {
         console.log('resend error:', err);
         setError(err?.message || err?.error || 'Failed to resend code.');
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -46,6 +49,7 @@ export default function ResetPasswordScreen() {
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
+            editable={!loading}
           />
         </View>
         {error ? <Text style={{ color: '#FF5F5F', marginBottom: 12, alignSelf: 'center' }}>{error}</Text> : null}

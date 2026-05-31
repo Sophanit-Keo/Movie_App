@@ -1,5 +1,6 @@
 export interface AuthContextType {
   token: string | null;
+  email: string |null;
   isLoading: boolean;
   login: (token: string) => Promise<void>;
   logout: () => Promise<void>;
