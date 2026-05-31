@@ -60,29 +60,29 @@
 ---
 
 ## 📸 Screenshots
-### Authentication 
-| Welcome | Login | Sign Up | Verification |
-|---------|-------|---------|--------------|
-|![Wellcome Screen](./screenshot/RootScreen.jpg)| ![Login Screen](./screenshot/LoginScreen.jpg) |![SignUp Screen](./screenshot/SignUpScreen.jpg) | ![Verification Screen](./screenshot/VerifyAccountScreen.jpg) |
+### 🔐 Authentication 
+| Welcome | Login | Sign Up |
+|-----------|-----------|-----------|
+|![Wellcome Screen](./screenshot/RootScreen.jpg)|![Login Screen](./screenshot/LoginScreen.jpg) |![SignUp Screen](./screenshot/SignUpScreen.jpg)|
 
-| Reset Password | New Password |
-|----------------|--------------|
-| ![Reset Password](./screenshot/ResetPasswordScreen_P1.jpg)|![New Password](./screenshot/ResetPasswordScreen_P2.jpg) |
+| Reset Password | New Password | Verification |
+|-----------|-----------|-----------|
+|![Reset Password](./screenshot/ResetPasswordScreen_P1.jpg)|![New Password](./screenshot/ResetPasswordScreen_P2.jpg)|![Verification Screen](./screenshot/VerifyAccountScreen.jpg) |
 
-### Search
+### 🔎 Search
 | Search | Search Result  | Search Fail  |
-|------|--------|---------|
-| ![Search P1](./screenshot/SearchScreen_P1.jpg) | ![Search P2](./screenshot/SearchScreen_P2.jpg) |![Search P3](./screenshot/SearchScreen_P3.jpg)  |
+|-----------|-----------|-----------|
+|![Search P1](./screenshot/SearchScreen_P1.jpg)|![Search P2](./screenshot/SearchScreen_P2.jpg)|![Search P3](./screenshot/SearchScreen_P3.jpg)|
 
-### Home
+### 🏠 Home
 | Home View  |  About Movie | Cast Movie  | Review Movie |
-|--------|--------|--------|--------|
-| ![Home P1](/screenshot/HomeScreen.jpg) | ![Home P2](./screenshot/DetailsAboutMovie.jpg) | ![Home P3](./screenshot/DetailsCastMovie.jpg) | ![Home P4](./screenshot/DetailsReviewMovie.jpg) |
+|-----------|-----------|-----------|-----------|
+|![Home P1](/screenshot/HomeScreen.jpg)|![Home P2](./screenshot/DetailsAboutMovie.jpg)|![Home P3](./screenshot/DetailsCastMovie.jpg)|![Home P4](./screenshot/DetailsReviewMovie.jpg)|
 
-### Profile
-| Search View 1 | Search View 2  | Search View 3  |
-|------|--------|---------|
-| _(screenshot)_ |_(screenshot)_  |_(screenshot)_|
+### 👥 Profile
+| Profile | Edit Profile  | Change Password | Log Out |
+|-----------|-----------|-----------|-----------|
+|![Profile](./screenshot/Profile.jpg)|![Edit Profile](./screenshot/EditProfile.jpg)|![Change Password](./screenshot/ChangePassword.jpg)|![Log Out](./screenshot/LogOut.jpg)|
 
 ---
 
