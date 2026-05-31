@@ -9,6 +9,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   
@@ -16,14 +17,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     SecureStore.getItemAsync(TOKEN_KEY).then(async (saved) => {
       if (saved) {
         try {
-          const res = await fetch(`${BASE_URL}/user`, {
+          const res = await fetch(`${BASE_URL}user`, {
             headers: { Authorization: `Bearer ${saved}` },
           });
           if (res.ok) {
-            setToken(saved);            // ✅ valid — stay logged in
+            const userData = await res.json();
+            setToken(saved);
+            setEmail(userData.email ?? null);
           } else {
             await SecureStore.deleteItemAsync(TOKEN_KEY);
             setToken(null);
+            setEmail(null);
           }
         } catch {
           // Network error (offline) — keep the token and try later
@@ -37,15 +41,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function login(newToken: string) {
     await SecureStore.setItemAsync(TOKEN_KEY, newToken);
     setToken(newToken);
+    try {
+      const res = await fetch(`${BASE_URL}user`, {
+        headers: { Authorization: `Bearer ${newToken}` },
+      });
+      if (res.ok) {
+        const userData = await res.json();
+        setEmail(userData.email ?? null);
+      }
+    } catch {}
   }
 
   async function logout() {
     await SecureStore.deleteItemAsync(TOKEN_KEY);
     setToken(null);
+    setEmail(null);
   }
 
   return (
-    <AuthContext.Provider value={{ token, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ token, email, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

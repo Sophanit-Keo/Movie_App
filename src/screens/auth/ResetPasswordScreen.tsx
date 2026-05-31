@@ -53,10 +53,9 @@ export default function ResetPasswordScreen() {
           />
         </View>
         {error ? <Text style={{ color: '#FF5F5F', marginBottom: 12, alignSelf: 'center' }}>{error}</Text> : null}
-        <AuthButton
-          title={loading ? 'Sending Code...' : 'Send Code'}
+        <AuthButton 
+          title={loading ? 'Sending Code' : 'Send Code'}
             onPress={() => handleResendCode()}
-            loading={loading}
         />
       </View>
       </ScrollView>
