@@ -60,6 +60,7 @@ export default function CreateNewPasswordScreen() {
               label='Confirm Code'
               value={code}
               onChangeText={setCode}
+              editable={!loading}
             />
             <AuthInput
               label="Email Address"
@@ -68,6 +69,7 @@ export default function CreateNewPasswordScreen() {
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
+              editable={!loading}
             />
             <AuthInput
               label="New Password"
@@ -75,6 +77,7 @@ export default function CreateNewPasswordScreen() {
               value={password}
               onChangeText={setPassword}
               secureToggle
+              editable={!loading}
             />
             <AuthInput
               label="Confirm Password"
@@ -82,10 +85,11 @@ export default function CreateNewPasswordScreen() {
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               secureToggle
+              editable={!loading}
             />
           </View>
           {error ? <Text style={{ color: '#FF5F5F', marginBottom: 12, textAlign: 'center' }}>{error}</Text> : null}
-          <AuthButton title={loading ? 'Reseting Password..' : 'Confirm'} onPress={() => fectNewPassword()} />
+          <AuthButton title={loading ? 'Resetting Password...' : 'Confirm'} onPress={() => fectNewPassword()} loading={loading} />
         </View>
       </ScrollView>
       </KeyboardAvoidingView>

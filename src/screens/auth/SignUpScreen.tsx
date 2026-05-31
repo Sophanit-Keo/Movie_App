@@ -61,12 +61,14 @@ export default function SignUpScreen() {
             placeholder="Enter firstname"
             value={firstName}
             onChangeText={setFirstName}
+            editable={!loading}
           />
           <AuthInput
             label="Last Name"
             placeholder="Enter lastname"
             value={lastName}
             onChangeText={setLastName}
+            editable={!loading}
           />
           <AuthInput
             label="Email Address"
@@ -75,6 +77,7 @@ export default function SignUpScreen() {
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
+            editable={!loading}
           />
           <AuthInput
             label="Password"
@@ -82,6 +85,7 @@ export default function SignUpScreen() {
             value={password}
             onChangeText={setPassword}
             secureToggle
+            editable={!loading}
           />
           <AuthInput
             label="Confirm Password"
@@ -89,6 +93,7 @@ export default function SignUpScreen() {
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureToggle
+            editable={!loading}
           />
 
           <TouchableOpacity style={styles.checkRow} onPress={() => setAgreed(!agreed)}>
@@ -104,8 +109,9 @@ export default function SignUpScreen() {
         </View>
         {error ? <Text style={{ color: '#FF5F5F', marginBottom: 12, alignSelf: 'center' }}>{error}</Text> : null}
         <AuthButton
-          title={loading ? 'Sing Up...' : 'SignUp'}
+          title={loading ? 'Signing Up...' : 'Sign Up'}
           onPress={fectRegister}
+          loading={loading}
         />
       </View>
       </ScrollView>

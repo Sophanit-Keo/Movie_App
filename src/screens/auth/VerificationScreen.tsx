@@ -81,6 +81,7 @@ export default function VerificationScreen() {
               onChangeText={text => handleChange(text.slice(-1), i)}
               keyboardType="number-pad"
               maxLength={1}
+              editable={!loading}
             />
           ))}
         </View>
@@ -90,6 +91,7 @@ export default function VerificationScreen() {
           title={loading ? 'Verifying...' : 'Continue'}
           onPress={handleVerify}
           style={styles.btn}
+          loading={loading}
         />
 
         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 8 }}>
