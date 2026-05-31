@@ -150,6 +150,7 @@ Then open `.env` and set your API URL:
 ```env
 EXPO_PUBLIC_API_URL=https://laravel-auth-api-opal.vercel.app/api
 EXPO_PUBLIC_API_TOKEN_TMDB: your_tmdb_read_access_token_here 
+EXPO_PUBLIC_TMDB_API_KEY = 76598b8a9e5e6833b0239b2ad48cc2f3
 ```
 
 > **Note:** The `EXPO_PUBLIC_` prefix is required by Expo to expose the variable to the app bundle.
@@ -162,6 +163,7 @@ EXPO_PUBLIC_API_TOKEN_TMDB: your_tmdb_read_access_token_here
 |----------|-------------|---------|
 | `EXPO_PUBLIC_API_URL` | Base URL of the backend REST API | `https://laravel-auth-api-opal.vercel.app/api` |
 | `EXPO_PUBLIC_API_TOKEN_TMDB` | Get the Token form movie DB | your_tmdb_read_access_token_here |
+| `EXPO_PUBLIC_TMDB_API_KEY` | Get the API key form movie DB | your_tmdb_read_access_api_here |
 
 Create a `.env` file at the project root (next to `package.json`). A template is provided at [`.env.example`](.env.example).
 
